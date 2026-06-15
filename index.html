@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Queerer Landesverband MV – Prototyp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =================================================================
+   DESIGN-TOKENS  –  HIER ALLES ZENTRAL ÄNDERBAR
+   Wenn ihr euch für Farben / Logo entscheidet, nur diese Werte
+   anpassen – die ganze Seite zieht automatisch mit.
+   ================================================================= */
+:root{
+  /* Farben */
+  --bg:           #FCF7F4;   /* warmes, leicht rosé Off-White */
+  --surface:      #FFFFFF;   /* Karten, Header */
+  --surface-warm: #F7EDE7;   /* abgesetzte Abschnitte */
+  --ink:          #2E1A2B;   /* Haupttext (tiefes Pflaume) */
+  --ink-soft:     #6B5563;   /* Sekundärtext */
+  --accent:       #C0356B;   /* Hauptakzent (Rosé/Magenta) */
+  --accent-soft:  #FBE4EC;   /* Akzent als Hintergrundton */
+  --secondary:    #E8A33D;   /* warmes Gold (Deko/Details) */
+  --secondary-soft:#FBEFD8;
+  --line:         #EADFD9;   /* feine Trennlinien */
+
+  /* Rundungen (organisch, weich) */
+  --r-sm: 12px;
+  --r-md: 20px;
+  --r-lg: 34px;
+  --r-pill: 999px;
+
+  /* Schrift */
+  --font-display: "Bricolage Grotesque", Georgia, serif;
+  --font-body: "Outfit", system-ui, sans-serif;
+
+  /* Layout */
+  --maxw: 1120px;
+  --pad: clamp(1.2rem, 4vw, 3rem);
+}
+
+/* ===========================  BASIS  =========================== */
+*{box-sizing:border-box;}
+html{scroll-behavior:auto;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:1.125rem;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:var(--font-display);line-height:1.1;font-weight:800;margin:0 0 .5em;}
+h1{font-size:clamp(2.4rem,6vw,4.2rem);letter-spacing:-.02em;}
+h2{font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.01em;}
+h3{font-size:clamp(1.2rem,2.5vw,1.5rem);font-weight:600;}
+p{margin:0 0 1rem;max-width:64ch;}
+a{color:var(--accent);text-decoration-thickness:.08em;text-underline-offset:.18em;}
+img{max-width:100%;display:block;}
+
+.eyebrow{
+  font-size:.82rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 .8rem;
+}
+
+/* Skip-Link für Tastatur/Screenreader */
+.skip{
+  position:absolute;left:-999px;top:0;z-index:1000;
+  background:var(--ink);color:#fff;padding:.7rem 1.2rem;border-radius:0 0 var(--r-sm) 0;
+}
+.skip:focus{left:0;}
+
+/* Sichtbarer Fokus für alle interaktiven Elemente */
+a:focus-visible,button:focus-visible,input:focus-visible,
+textarea:focus-visible,.nav-link:focus-visible,summary:focus-visible{
+  outline:3px solid var(--accent);outline-offset:3px;border-radius:6px;
+}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--pad);}
+
+/* ===========================  BUTTONS  =========================== */
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-family:var(--font-body);font-weight:600;font-size:1rem;
+  padding:.85rem 1.6rem;border-radius:var(--r-pill);
+  border:2px solid transparent;cursor:pointer;text-decoration:none;
+  transition:transform .15s ease, background .15s ease;
+}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{transform:translateY(-2px);background:#a82c5c;}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--ink);}
+.btn-ghost:hover{transform:translateY(-2px);background:var(--ink);color:#fff;}
+
+/* ===========================  HEADER / NAV  =========================== */
+.site-header{
+  position:sticky;top:0;z-index:100;
+  background:color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-block:.9rem;}
+.logo{display:flex;align-items:center;gap:.7rem;background:none;border:none;cursor:pointer;padding:0;}
+.logo-mark{
+  width:42px;height:42px;border-radius:var(--r-md) var(--r-sm) var(--r-md) var(--r-sm);
+  background:linear-gradient(135deg,var(--accent),var(--secondary));
+  flex:none;
+}
+.logo-text{font-family:var(--font-display);font-weight:800;font-size:1.15rem;color:var(--ink);line-height:1.1;text-align:left;}
+.logo-text small{display:block;font-family:var(--font-body);font-weight:500;font-size:.72rem;color:var(--ink-soft);letter-spacing:.02em;}
+
+.nav{display:flex;gap:.3rem;align-items:center;}
+.nav-link{
+  font:inherit;font-weight:500;color:var(--ink);background:none;border:none;cursor:pointer;
+  padding:.5rem .85rem;border-radius:var(--r-pill);transition:background .15s;
+}
+.nav-link:hover{background:var(--accent-soft);}
+.nav-link[aria-current="page"]{background:var(--accent);color:#fff;}
+.nav-cta{margin-left:.4rem;}
+
+.menu-toggle{display:none;background:none;border:2px solid var(--line);border-radius:var(--r-sm);padding:.5rem .7rem;cursor:pointer;font-size:1.1rem;color:var(--ink);}
+
+/* ===========================  PAGES  =========================== */
+.page{padding-block:clamp(2.5rem,6vw,5rem);}
+.page.page-flush{padding-block:0;}
+.page[hidden]{display:none;}
+.page-narrow{max-width:760px;}
+
+/* Wiederkehrender Aufruf am Ende jeder Seite */
+.recurring-cta{padding-block:clamp(2rem,5vw,3.5rem);}
+.recurring-cta .cta-band{
+  background:var(--accent-soft);border-radius:var(--r-lg);
+  padding:clamp(1.8rem,4vw,3rem);
+  display:flex;flex-wrap:wrap;gap:1.5rem;align-items:center;justify-content:space-between;
+}
+.recurring-cta .cta-band h2{margin-bottom:.4rem;}
+.recurring-cta .cta-band p{color:var(--ink);margin:0;max-width:46ch;}
+.cta-actions{display:flex;flex-wrap:wrap;gap:.7rem;}
+
+/* ===========================  HERO  =========================== */
+.hero{position:relative;overflow:hidden;padding-block:clamp(3rem,9vw,7rem);}
+.hero-blobs{position:absolute;inset:0;z-index:0;pointer-events:none;}
+.blob{position:absolute;border-radius:50%;filter:blur(8px);opacity:.55;}
+.blob-1{width:38vw;height:38vw;max-width:480px;max-height:480px;background:var(--accent-soft);top:-8%;right:-6%;}
+.blob-2{width:30vw;height:30vw;max-width:380px;max-height:380px;background:var(--secondary-soft);bottom:-12%;left:-8%;}
+.blob-3{width:18vw;height:18vw;max-width:220px;max-height:220px;background:var(--accent-soft);bottom:18%;right:14%;opacity:.4;}
+.hero .wrap{position:relative;z-index:1;}
+.hero h1{max-width:18ch;}
+.hero .lead{font-size:clamp(1.15rem,2.2vw,1.4rem);color:var(--ink-soft);max-width:52ch;}
+.hero-actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.8rem;}
+
+@media (prefers-reduced-motion: no-preference){
+  .blob{animation:float 16s ease-in-out infinite;}
+  .blob-2{animation-duration:20s;animation-direction:reverse;}
+  .blob-3{animation-duration:24s;}
+}
+@keyframes float{0%,100%{transform:translate(0,0);}50%{transform:translate(2%,-3%);}}
+
+/* ===========================  SECTIONS / CARDS  =========================== */
+.section{padding-block:clamp(2.5rem,6vw,4.5rem);}
+.section-warm{background:var(--surface-warm);}
+.section-head{max-width:60ch;margin-bottom:2.2rem;}
+
+.grid{display:grid;gap:1.4rem;}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr));}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+
+.card{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:1.8rem;
+}
+.card .icon{
+  width:54px;height:54px;border-radius:var(--r-md);
+  background:var(--accent-soft);display:grid;place-items:center;font-size:1.5rem;margin-bottom:1rem;
+}
+.card h3{margin-bottom:.4rem;}
+.card p{color:var(--ink-soft);margin-bottom:0;font-size:1rem;}
+
+/* Hilfe-/Support-Leiste */
+.support{
+  background:var(--ink);color:#fff;border-radius:var(--r-lg);
+  padding:clamp(1.5rem,4vw,2.5rem);display:flex;flex-wrap:wrap;gap:1.2rem;
+  align-items:center;justify-content:space-between;
+}
+.support h3{color:#fff;}
+.support p{color:rgba(255,255,255,.85);margin:0;}
+.support .btn-ghost{color:#fff;border-color:#fff;}
+.support .btn-ghost:hover{background:#fff;color:var(--ink);}
+
+/* ===========================  VORSTAND  =========================== */
+.member{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;}
+.member-photo{
+  aspect-ratio:4/3;background:linear-gradient(135deg,var(--accent-soft),var(--secondary-soft));
+  display:grid;place-items:center;color:var(--ink-soft);font-size:.9rem;
+}
+.member-body{padding:1.4rem 1.6rem 1.7rem;}
+.member-body h3{margin-bottom:.1rem;}
+.pronoun{display:inline-block;font-size:.85rem;color:var(--accent);background:var(--accent-soft);
+  padding:.15rem .6rem;border-radius:var(--r-pill);margin-bottom:.6rem;}
+.role{font-weight:600;color:var(--ink);margin-bottom:.5rem;}
+.member-body p{font-size:.98rem;color:var(--ink-soft);margin-bottom:0;}
+
+/* ===========================  WERTE  =========================== */
+.value-list{display:grid;gap:1.1rem;margin-top:1.5rem;padding:0;list-style:none;}
+.value-list li{display:flex;gap:1rem;align-items:flex-start;}
+.value-list .num{
+  flex:none;width:38px;height:38px;border-radius:var(--r-sm);
+  background:var(--accent);color:#fff;display:grid;place-items:center;font-family:var(--font-display);font-weight:800;
+}
+.value-list b{display:block;}
+.value-list span{color:var(--ink-soft);font-size:1rem;}
+
+/* ===========================  FAQ  =========================== */
+.faq{border-top:1px solid var(--line);}
+.faq-item{border-bottom:1px solid var(--line);}
+.faq-q{
+  width:100%;background:none;border:none;cursor:pointer;text-align:left;
+  font-family:var(--font-display);font-weight:600;font-size:1.15rem;color:var(--ink);
+  padding:1.3rem 0;display:flex;justify-content:space-between;gap:1rem;align-items:center;
+}
+.faq-q .plus{flex:none;font-size:1.5rem;color:var(--accent);transition:transform .2s;}
+.faq-q[aria-expanded="true"] .plus{transform:rotate(45deg);}
+.faq-a{padding:0 0 1.4rem;color:var(--ink-soft);max-width:70ch;}
+.faq-a[hidden]{display:none;}
+
+/* ===========================  FORM  =========================== */
+.form{display:grid;gap:1.2rem;max-width:560px;}
+.field{display:grid;gap:.4rem;}
+.field label{font-weight:600;font-size:.98rem;}
+.field .req{color:var(--accent);}
+.field input,.field textarea{
+  font:inherit;padding:.8rem 1rem;border:2px solid var(--line);border-radius:var(--r-md);
+  background:var(--surface);color:var(--ink);width:100%;
+}
+.field input:focus,.field textarea:focus{border-color:var(--accent);outline:none;}
+.consent{display:flex;gap:.7rem;align-items:flex-start;font-size:.95rem;color:var(--ink-soft);}
+.consent input{margin-top:.25rem;width:1.2rem;height:1.2rem;flex:none;accent-color:var(--accent);}
+.form-note{font-size:.85rem;color:var(--ink-soft);background:var(--secondary-soft);
+  padding:.8rem 1rem;border-radius:var(--r-md);max-width:560px;}
+.form-success{display:none;background:var(--accent-soft);border:1px solid var(--accent);
+  border-radius:var(--r-md);padding:1rem 1.2rem;color:var(--ink);max-width:560px;}
+
+/* Kontakt-Alternativen */
+.contact-alt{display:grid;gap:.8rem;margin-top:.5rem;}
+.contact-alt a{font-weight:600;}
+
+/* Impressum / Datenschutz */
+.legal h3{margin-top:2rem;}
+.legal p{color:var(--ink-soft);}
+.placeholder{background:var(--secondary-soft);padding:.1rem .45rem;border-radius:6px;font-size:.95em;}
+
+/* ===========================  FOOTER  =========================== */
+.site-footer{background:var(--ink);color:#fff;padding-block:clamp(2.5rem,6vw,4rem);margin-top:3rem;}
+.footer-grid{display:grid;gap:2rem;grid-template-columns:1.4fr 1fr 1fr;}
+.site-footer h4{font-family:var(--font-display);font-size:1.05rem;margin:0 0 .8rem;}
+.site-footer a,.site-footer button{color:rgba(255,255,255,.8);text-decoration:none;background:none;border:none;
+  font:inherit;cursor:pointer;padding:0;display:block;margin-bottom:.5rem;text-align:left;}
+.site-footer a:hover,.site-footer button:hover{color:#fff;}
+.footer-brand p{color:rgba(255,255,255,.75);font-size:.95rem;}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.15);margin-top:2.2rem;padding-top:1.4rem;
+  font-size:.85rem;color:rgba(255,255,255,.6);}
+
+/* ===========================  THEME-TESTER (nur Vorschau)  =========================== */
+.theme-fab{
+  position:fixed;bottom:1.2rem;right:1.2rem;z-index:200;
+  background:var(--ink);color:#fff;border:none;border-radius:var(--r-pill);
+  padding:.8rem 1.2rem;font:inherit;font-weight:600;cursor:pointer;
+  box-shadow:0 8px 24px rgba(46,26,43,.25);
+}
+.theme-panel{
+  position:fixed;bottom:5rem;right:1.2rem;z-index:200;width:min(300px,90vw);
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:1.4rem;box-shadow:0 16px 48px rgba(46,26,43,.2);
+}
+.theme-panel[hidden]{display:none;}
+.theme-panel h4{font-family:var(--font-display);margin:0 0 .3rem;}
+.theme-panel .hint{font-size:.8rem;color:var(--ink-soft);margin-bottom:1rem;}
+.swatches{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.1rem;}
+.swatch{width:100%;display:flex;align-items:center;gap:.6rem;padding:.5rem .7rem;border:1px solid var(--line);
+  border-radius:var(--r-md);background:var(--surface);cursor:pointer;font:inherit;font-size:.9rem;color:var(--ink);}
+.swatch:hover{background:var(--surface-warm);}
+.swatch .dots{display:flex;gap:.25rem;}
+.swatch .dot{width:16px;height:16px;border-radius:50%;}
+.picker-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem;font-size:.9rem;}
+.picker-row input[type=color]{width:42px;height:30px;border:none;border-radius:8px;background:none;cursor:pointer;}
+
+/* ===========================  RESPONSIVE  =========================== */
+@media (max-width:860px){
+  .menu-toggle{display:block;}
+  .nav{
+    position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;
+    background:var(--surface);border-bottom:1px solid var(--line);padding:1rem var(--pad);gap:.2rem;
+  }
+  .nav[hidden]{display:none;}
+  .nav-link{padding:.8rem 1rem;}
+  .nav-cta{margin:.4rem 0 0;}
+  .footer-grid{grid-template-columns:1fr;}
+  .support{flex-direction:column;align-items:flex-start;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important;transition:none !important;scroll-behavior:auto;}
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Zum Inhalt springen</a>
+
+<!-- ===========================  HEADER  =========================== -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <button class="logo" data-page="start" aria-label="Zur Startseite">
+      <span class="logo-mark" aria-hidden="true"></span>
+      <span class="logo-text">Queerer Landesverband MV<small>Logo-Platzhalter · ersetzbar</small></span>
+    </button>
+
+    <button class="menu-toggle" aria-expanded="false" aria-controls="mainnav">☰ Menü</button>
+
+    <nav class="nav" id="mainnav" aria-label="Hauptnavigation">
+      <button class="nav-link" data-page="start">Start</button>
+      <button class="nav-link" data-page="vorstand">Vorstand</button>
+      <button class="nav-link" data-page="selbstverstaendnis">Selbstverständnis</button>
+      <button class="nav-link" data-page="faq">FAQ</button>
+      <button class="nav-link" data-page="mitglied">Mitglied werden</button>
+      <button class="nav-link" data-page="kontakt">Kontakt</button>
+      <button class="btn btn-primary nav-cta" data-page="mitglied">Mitmachen</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ===========================  STARTSEITE  =========================== -->
+<section class="page page-flush" id="page-start">
+
+  <div class="hero">
+    <div class="hero-blobs" aria-hidden="true">
+      <span class="blob blob-1"></span>
+      <span class="blob blob-2"></span>
+      <span class="blob blob-3"></span>
+    </div>
+    <div class="wrap">
+      <p class="eyebrow">Queerer Landesverband Mecklenburg-Vorpommern</p>
+      <h1>Ein Zuhause für queeres Leben im ganzen Land.</h1>
+      <p class="lead">Wir bündeln Stimmen, schaffen Sichtbarkeit und setzen uns dafür ein, dass queere Menschen in Mecklenburg-Vorpommern selbstbestimmt und sicher leben können – in der Stadt wie auf dem Land.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" data-page="mitglied">Mitglied werden</button>
+        <button class="btn btn-ghost" data-page="selbstverstaendnis">Wofür wir stehen</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Was wir tun</p>
+        <h2>Vernetzen, beraten, gehört werden</h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card">
+          <div class="icon" aria-hidden="true">🤝</div>
+          <h3>Vernetzen</h3>
+          <p>Wir verbinden queere Gruppen, Initiativen und Einzelpersonen im ganzen Land und stärken, was vor Ort schon wächst.</p>
+        </div>
+        <div class="card">
+          <div class="icon" aria-hidden="true">📣</div>
+          <h3>Sichtbar machen</h3>
+          <p>Wir bringen queere Anliegen in Politik und Öffentlichkeit – damit Vielfalt selbstverständlich wird.</p>
+        </div>
+        <div class="card">
+          <div class="icon" aria-hidden="true">🌱</div>
+          <h3>Unterstützen</h3>
+          <p>Wir geben Orientierung, vermitteln zu Beratungsangeboten und stehen an der Seite derer, die Rückhalt brauchen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-warm">
+    <div class="wrap">
+      <div class="support">
+        <div>
+          <h3>Du brauchst gerade Unterstützung?</h3>
+          <p>Es gibt Anlaufstellen, die zuhören – vertraulich und kostenlos. Wir helfen dir, die passende zu finden.</p>
+        </div>
+        <button class="btn btn-ghost" data-page="kontakt">Hilfe finden</button>
+      </div>
+    </div>
+  </section>
+
+</section>
+
+<!-- ===========================  VORSTAND  =========================== -->
+<section class="page" id="page-vorstand" hidden>
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Der Vorstand</p>
+      <h2>Die Menschen hinter dem Verband</h2>
+      <p>Wir stellen uns gerne vor. Foto, Name und Pronomen sind frei wählbar – niemand muss mehr von sich zeigen, als sich gut anfühlt.</p>
+    </div>
+    <div class="grid grid-3">
+      <article class="member">
+        <div class="member-photo" aria-hidden="true">Foto-Platzhalter</div>
+        <div class="member-body">
+          <h3>[Vorname Nachname]</h3>
+          <span class="pronoun">sie/ihr</span>
+          <p class="role">Vorsitz</p>
+          <p>Ein bis zwei Sätze: Wer bin ich, was treibt mich an, wofür stehe ich im Verband?</p>
+        </div>
+      </article>
+      <article class="member">
+        <div class="member-photo" aria-hidden="true">Foto-Platzhalter</div>
+        <div class="member-body">
+          <h3>[Vorname Nachname]</h3>
+          <span class="pronoun">er/ihm</span>
+          <p class="role">Stellv. Vorsitz</p>
+          <p>Ein bis zwei Sätze zur Person und zum Schwerpunkt im Vorstand.</p>
+        </div>
+      </article>
+      <article class="member">
+        <div class="member-photo" aria-hidden="true">Foto-Platzhalter</div>
+        <div class="member-body">
+          <h3>[Vorname Nachname]</h3>
+          <span class="pronoun">dey/deren</span>
+          <p class="role">Kasse</p>
+          <p>Ein bis zwei Sätze zur Person und zum Schwerpunkt im Vorstand.</p>
+        </div>
+      </article>
+      <article class="member">
+        <div class="member-photo" aria-hidden="true">Foto-Platzhalter</div>
+        <div class="member-body">
+          <h3>[Vorname Nachname]</h3>
+          <span class="pronoun">sie/ihr</span>
+          <p class="role">Schriftführung</p>
+          <p>Ein bis zwei Sätze zur Person und zum Schwerpunkt im Vorstand.</p>
+        </div>
+      </article>
+      <article class="member">
+        <div class="member-photo" aria-hidden="true">Foto-Platzhalter</div>
+        <div class="member-body">
+          <h3>[Vorname Nachname]</h3>
+          <span class="pronoun">er/ihm</span>
+          <p class="role">Beisitz</p>
+          <p>Ein bis zwei Sätze zur Person und zum Schwerpunkt im Vorstand.</p>
+        </div>
+      </article>
+      <article class="member">
+        <div class="member-photo" aria-hidden="true">Foto-Platzhalter</div>
+        <div class="member-body">
+          <h3>[Vorname Nachname]</h3>
+          <span class="pronoun">kein Pronomen / Name</span>
+          <p class="role">Beisitz</p>
+          <p>Ein bis zwei Sätze zur Person und zum Schwerpunkt im Vorstand.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================  SELBSTVERSTÄNDNIS  =========================== -->
+<section class="page" id="page-selbstverstaendnis" hidden>
+  <div class="wrap page-narrow">
+    <p class="eyebrow">Selbstverständnis</p>
+    <h2>Wofür wir stehen</h2>
+    <p>Wir sind ein Zusammenschluss queerer Menschen und Gruppen in Mecklenburg-Vorpommern. Uns verbindet die Überzeugung, dass alle Menschen – unabhängig von geschlechtlicher Identität, geschlechtlichem Ausdruck und sexueller Orientierung – frei, sicher und gleichberechtigt leben können sollen.</p>
+    <p>Unsere Arbeit ist parteiunabhängig, demokratisch und solidarisch. Wir treten Diskriminierung, Queerfeindlichkeit und Ausgrenzung in jeder Form entgegen.</p>
+
+    <h3>Unsere Grundsätze</h3>
+    <ul class="value-list">
+      <li><span class="num" aria-hidden="true">1</span><span><b>Vielfalt als Selbstverständlichkeit.</b> <span>Wir feiern die ganze Bandbreite queeren Lebens und schließen niemanden aus.</span></span></li>
+      <li><span class="num" aria-hidden="true">2</span><span><b>Stadt und Land zusammendenken.</b> <span>Queeres Leben findet überall statt – auch dort, wo es weniger sichtbar ist. Wir sind im ganzen Land aktiv.</span></span></li>
+      <li><span class="num" aria-hidden="true">3</span><span><b>Solidarität statt Konkurrenz.</b> <span>Wir arbeiten mit bestehenden Gruppen zusammen und stärken sie, statt sie zu ersetzen.</span></span></li>
+      <li><span class="num" aria-hidden="true">4</span><span><b>Selbstbestimmung.</b> <span>Jeder Mensch entscheidet selbst über die eigene Identität. Wir hören zu, statt vorzuschreiben.</span></span></li>
+      <li><span class="num" aria-hidden="true">5</span><span><b>Intersektional denken.</b> <span>Queerfeindlichkeit trifft selten allein. Wir denken Rassismus, Behindertenfeindlichkeit und andere Diskriminierungen mit.</span></span></li>
+    </ul>
+    <p style="margin-top:2rem;">Dieser Text ist ein Vorschlag zum Weiterschreiben – passt ihn gerne an eure tatsächlichen Beschlüsse und Schwerpunkte an.</p>
+  </div>
+</section>
+
+<!-- ===========================  FAQ  =========================== -->
+<section class="page" id="page-faq" hidden>
+  <div class="wrap page-narrow">
+    <p class="eyebrow">Häufige Fragen</p>
+    <h2>FAQ</h2>
+    <p>Antworten auf das, was wir am häufigsten gefragt werden. Fehlt etwas? <button class="nav-link" data-page="kontakt" style="padding:0;color:var(--accent);text-decoration:underline;">Schreib uns gerne.</button></p>
+
+    <div class="faq">
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Wer kann Mitglied werden?<span class="plus" aria-hidden="true">+</span></button>
+        <div class="faq-a" hidden>Alle, die unsere Ziele teilen – egal ob queer oder als Unterstützer:in. Auch Gruppen und Vereine können sich anschließen.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Was kostet eine Mitgliedschaft?<span class="plus" aria-hidden="true">+</span></button>
+        <div class="faq-a" hidden>[Platzhalter] Hier nennt ihr euren Mitgliedsbeitrag. Viele Verbände bieten ermäßigte oder Solidarbeiträge an, damit Geld kein Hindernis ist.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Seid ihr parteipolitisch?<span class="plus" aria-hidden="true">+</span></button>
+        <div class="faq-a" hidden>Nein. Wir sind parteiunabhängig. Wir vertreten queere Anliegen gegenüber allen demokratischen Akteur:innen.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Ich bin nicht aus einer großen Stadt – ist das ein Problem?<span class="plus" aria-hidden="true">+</span></button>
+        <div class="faq-a" hidden>Im Gegenteil. Gerade abseits der Zentren ist Vernetzung wichtig. Wir sind im ganzen Land für euch da.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Wie kann ich mich einbringen, ohne Mitglied zu sein?<span class="plus" aria-hidden="true">+</span></button>
+        <div class="faq-a" hidden>Es gibt viele Wege: zu Veranstaltungen kommen, ehrenamtlich mithelfen, Wissen teilen oder uns finanziell unterstützen. Meldet euch einfach.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Was passiert mit meinen Daten, wenn ich euch kontaktiere?<span class="plus" aria-hidden="true">+</span></button>
+        <div class="faq-a" hidden>Wir verarbeiten nur, was nötig ist, und geben nichts ohne Einwilligung weiter. Details stehen in unserer Datenschutzerklärung.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================  MITGLIED WERDEN  =========================== -->
+<section class="page" id="page-mitglied" hidden>
+  <div class="wrap">
+    <div class="section-head page-narrow">
+      <p class="eyebrow">Mitmachen</p>
+      <h2>Werde Teil des Verbands</h2>
+      <p>Jede zusätzliche Stimme macht uns stärker. Such dir aus, was zu dir passt – alles ist willkommen.</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="icon" aria-hidden="true">💜</div>
+        <h3>Mitglied werden</h3>
+        <p>Werde aktives oder förderndes Mitglied und gestalte mit, wofür wir uns einsetzen.</p>
+      </div>
+      <div class="card">
+        <div class="icon" aria-hidden="true">⏳</div>
+        <h3>Zeit schenken</h3>
+        <p>Hilf ehrenamtlich bei Aktionen, Veranstaltungen oder im Hintergrund – so viel oder wenig du magst.</p>
+      </div>
+      <div class="card">
+        <div class="icon" aria-hidden="true">☕</div>
+        <h3>Unterstützen</h3>
+        <p>Mit einer Spende ermöglichst du unsere Arbeit dort, wo sie am dringendsten gebraucht wird.</p>
+      </div>
+    </div>
+    <div style="margin-top:2rem;">
+      <button class="btn btn-primary" data-page="kontakt">Jetzt Kontakt aufnehmen</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================  KONTAKT  =========================== -->
+<section class="page" id="page-kontakt" hidden>
+  <div class="wrap">
+    <div class="grid grid-2">
+      <div>
+        <p class="eyebrow">Kontakt</p>
+        <h2>Schreib uns</h2>
+        <p>Ob Frage, Idee oder einfach Hallo – wir freuen uns über deine Nachricht.</p>
+
+        <form class="form" id="contactForm" novalidate>
+          <div class="field">
+            <label for="cf-name">Name <span class="req" aria-hidden="true">*</span></label>
+            <input id="cf-name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="cf-mail">E-Mail <span class="req" aria-hidden="true">*</span></label>
+            <input id="cf-mail" name="email" type="email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="cf-msg">Deine Nachricht <span class="req" aria-hidden="true">*</span></label>
+            <textarea id="cf-msg" name="message" rows="5" required></textarea>
+          </div>
+          <label class="consent">
+            <input type="checkbox" id="cf-consent" required>
+            <span>Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung der Anfrage verarbeitet werden. Hinweise dazu in der <button type="button" class="nav-link" data-page="datenschutz" style="padding:0;color:var(--accent);text-decoration:underline;display:inline;">Datenschutzerklärung</button>. <span class="req" aria-hidden="true">*</span></span>
+          </label>
+          <button class="btn btn-primary" type="submit" style="justify-self:start;">Nachricht senden</button>
+        </form>
+        <p class="form-note">Hinweis: In diesem Prototyp wird noch nichts versendet oder gespeichert – das Formular zeigt nur, wie es später aussieht.</p>
+        <div class="form-success" id="formSuccess" role="status">Danke! In der fertigen Seite ginge deine Nachricht jetzt an uns raus.</div>
+      </div>
+
+      <div>
+        <div class="card" style="background:var(--surface-warm);border:none;">
+          <h3>Direkt erreichen</h3>
+          <div class="contact-alt">
+            <a href="mailto:kontakt@platzhalter.de">kontakt@platzhalter.de</a>
+            <a href="#">Instagram · @platzhalter</a>
+            <a href="#">Mastodon · @platzhalter</a>
+          </div>
+          <p style="margin-top:1.2rem;color:var(--ink-soft);font-size:.95rem;">Postanschrift, Telefonzeiten o. Ä. könnt ihr hier ergänzen.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================  IMPRESSUM  =========================== -->
+<section class="page legal" id="page-impressum" hidden>
+  <div class="wrap page-narrow">
+    <p class="eyebrow">Pflichtangaben</p>
+    <h2>Impressum</h2>
+    <p>Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG).</p>
+
+    <h3>Anbieter</h3>
+    <p><span class="placeholder">[Vereinsname e. V.]</span><br>
+    <span class="placeholder">[Straße & Hausnummer]</span><br>
+    <span class="placeholder">[PLZ Ort]</span></p>
+
+    <h3>Vertreten durch</h3>
+    <p><span class="placeholder">[Name des vertretungsberechtigten Vorstands]</span></p>
+
+    <h3>Kontakt</h3>
+    <p>E-Mail: <span class="placeholder">[kontakt@platzhalter.de]</span><br>
+    Telefon: <span class="placeholder">[optional]</span></p>
+
+    <h3>Registereintrag</h3>
+    <p>Registergericht: <span class="placeholder">[Amtsgericht …]</span><br>
+    Vereinsregister-Nr.: <span class="placeholder">[VR …]</span></p>
+
+    <h3>Verantwortlich für den Inhalt</h3>
+    <p><span class="placeholder">[Name, Anschrift]</span></p>
+
+    <p style="margin-top:2rem;">Diese Felder sind rechtlich verpflichtend – tragt eure tatsächlichen Vereinsdaten ein. Im Zweifel lohnt eine kurze rechtliche Prüfung.</p>
+  </div>
+</section>
+
+<!-- ===========================  DATENSCHUTZ  =========================== -->
+<section class="page legal" id="page-datenschutz" hidden>
+  <div class="wrap page-narrow">
+    <p class="eyebrow">Datenschutz</p>
+    <h2>Datenschutzerklärung</h2>
+    <p>Diese Seite ist rechtlich getrennt vom Impressum und unter der DSGVO verpflichtend, sobald ihr z. B. ein Kontaktformular, externe Schriftarten oder Statistik-Tools einsetzt.</p>
+    <p><span class="placeholder">[Platzhalter]</span> Hier kommt eure vollständige Datenschutzerklärung hin: Verantwortliche Stelle, welche Daten zu welchem Zweck verarbeitet werden, Rechtsgrundlagen, Speicherdauer, Betroffenenrechte und Kontakt zur Datenschutzaufsicht.</p>
+    <p>Für DSGVO-konforme Texte gibt es seriöse Generatoren; bei einem Verband mit Mitgliederdaten kann eine fachliche Prüfung sinnvoll sein.</p>
+  </div>
+</section>
+
+<!-- =====  WIEDERKEHRENDER AUFRUF  –  steht am Ende JEDER Seite (über dem Footer)  ===== -->
+<section class="recurring-cta">
+  <div class="wrap">
+    <div class="cta-band">
+      <div>
+        <p class="eyebrow">Mitmachen</p>
+        <h2>Stärke unsere Stimme</h2>
+        <p>Ob mit Zeit, Ideen oder als unterstützendes Mitglied – jede:r ist willkommen. Gemeinsam erreichen wir mehr.</p>
+      </div>
+      <div class="cta-actions">
+        <button class="btn btn-primary" data-page="mitglied">Mitglied werden</button>
+        <button class="btn btn-ghost" data-page="kontakt">Kontakt</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===========================  FOOTER  =========================== -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h4>Queerer Landesverband MV</h4>
+        <p>Ein Zuhause für queeres Leben in Mecklenburg-Vorpommern – sichtbar, vernetzt und solidarisch.</p>
+      </div>
+      <div>
+        <h4>Seiten</h4>
+        <button data-page="start">Start</button>
+        <button data-page="vorstand">Vorstand</button>
+        <button data-page="selbstverstaendnis">Selbstverständnis</button>
+        <button data-page="faq">FAQ</button>
+      </div>
+      <div>
+        <h4>Mitmachen & Recht</h4>
+        <button data-page="mitglied">Mitglied werden</button>
+        <button data-page="kontakt">Kontakt</button>
+        <button data-page="impressum">Impressum</button>
+        <button data-page="datenschutz">Datenschutz</button>
+      </div>
+    </div>
+    <div class="footer-bottom">Prototyp · Farben, Logo und Texte sind Platzhalter und frei anpassbar.</div>
+  </div>
+</footer>
+
+<!-- ===========================  THEME-TESTER (Vorschau-Werkzeug)  =========================== -->
+<button class="theme-fab" id="themeFab" aria-expanded="false" aria-controls="themePanel">🎨 Farben testen</button>
+<div class="theme-panel" id="themePanel" hidden>
+  <h4>Farben testen</h4>
+  <p class="hint">Nur ein Vorschau-Werkzeug – nicht Teil der späteren Seite. Probiert Paletten aus.</p>
+  <div class="swatches">
+    <button class="swatch" data-theme="rose">
+      <span class="dots"><span class="dot" style="background:#C0356B"></span><span class="dot" style="background:#E8A33D"></span><span class="dot" style="background:#FCF7F4"></span></span> Warm Rosé (Standard)
+    </button>
+    <button class="swatch" data-theme="lavendel">
+      <span class="dots"><span class="dot" style="background:#7C4DBE"></span><span class="dot" style="background:#E58FB0"></span><span class="dot" style="background:#F8F5FB"></span></span> Lavendel
+    </button>
+    <button class="swatch" data-theme="ostsee">
+      <span class="dots"><span class="dot" style="background:#1E7A8C"></span><span class="dot" style="background:#E8A33D"></span><span class="dot" style="background:#F3F7F7"></span></span> Ostsee
+    </button>
+    <button class="swatch" data-theme="wald">
+      <span class="dots"><span class="dot" style="background:#2F7A4F"></span><span class="dot" style="background:#E0913A"></span><span class="dot" style="background:#F5F7F3"></span></span> Wald
+    </button>
+  </div>
+  <div class="picker-row"><label for="pick-accent">Akzent</label><input type="color" id="pick-accent" value="#C0356B"></div>
+  <div class="picker-row"><label for="pick-bg">Hintergrund</label><input type="color" id="pick-bg" value="#FCF7F4"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const root = document.documentElement;
+
+  /* ---------- Seiten-Navigation ---------- */
+  const pages = document.querySelectorAll('.page');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  function showPage(id){
+    let matched = false;
+    pages.forEach(p => {
+      const isTarget = (p.id === 'page-' + id);
+      p.hidden = !isTarget;
+      if(isTarget) matched = true;
+    });
+    if(!matched) return;
+    navLinks.forEach(l => {
+      const active = l.dataset.page === id;
+      if(l.classList.contains('nav-link')) l.setAttribute('aria-current', active ? 'page' : 'false');
+    });
+    // Fokus auf den Inhalt setzen (Barrierefreiheit)
+    const main = document.getElementById('main');
+    main.setAttribute('tabindex','-1');
+    try { main.focus({preventScroll:true}); } catch(e){ main.focus(); }
+    // Zuverlässig nach ganz oben – mehrere Wege, da Vorschau-Fenster sich unterschiedlich verhalten
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    closeMenu();
+  }
+
+  document.body.addEventListener('click', function(e){
+    const trigger = e.target.closest('[data-page]');
+    if(trigger){ e.preventDefault(); showPage(trigger.dataset.page); }
+  });
+
+  /* ---------- Mobiles Menü ---------- */
+  const toggle = document.querySelector('.menu-toggle');
+  const nav = document.getElementById('mainnav');
+  function isMobile(){ return window.matchMedia('(max-width:860px)').matches; }
+  function closeMenu(){ if(isMobile()){ nav.hidden = true; toggle.setAttribute('aria-expanded','false'); } else { nav.hidden = false; } }
+  toggle.addEventListener('click', function(){
+    const open = nav.hidden;
+    nav.hidden = !open ? true : false;
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+  window.addEventListener('resize', function(){ if(!isMobile()) nav.hidden = false; });
+  if(isMobile()) nav.hidden = true;
+
+  /* ---------- FAQ-Akkordeon ---------- */
+  document.querySelectorAll('.faq-q').forEach(function(btn){
+    const answer = btn.nextElementSibling;
+    btn.addEventListener('click', function(){
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      answer.hidden = open;
+    });
+  });
+
+  /* ---------- Kontaktformular (Demo) ---------- */
+  const form = document.getElementById('contactForm');
+  const success = document.getElementById('formSuccess');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(!form.checkValidity()){ form.reportValidity(); return; }
+    form.reset();
+    success.style.display = 'block';
+    success.focus && success.focus();
+  });
+
+  /* ---------- Theme-Tester ---------- */
+  const fab = document.getElementById('themeFab');
+  const panel = document.getElementById('themePanel');
+  fab.addEventListener('click', function(){
+    const open = panel.hidden;
+    panel.hidden = !open;
+    fab.setAttribute('aria-expanded', String(open));
+  });
+
+  const themes = {
+    rose:     {accent:'#C0356B', accentSoft:'#FBE4EC', secondary:'#E8A33D', secondarySoft:'#FBEFD8', bg:'#FCF7F4', surfaceWarm:'#F7EDE7', ink:'#2E1A2B'},
+    lavendel: {accent:'#7C4DBE', accentSoft:'#EDE4F8', secondary:'#E58FB0', secondarySoft:'#FBE7EF', bg:'#F8F5FB', surfaceWarm:'#F0E9F7', ink:'#241733'},
+    ostsee:   {accent:'#1E7A8C', accentSoft:'#DCEEF1', secondary:'#E8A33D', secondarySoft:'#FBEFD8', bg:'#F3F7F7', surfaceWarm:'#E6F0F0', ink:'#13303A'},
+    wald:     {accent:'#2F7A4F', accentSoft:'#DFEFE5', secondary:'#E0913A', secondarySoft:'#FAEBD7', bg:'#F5F7F3', surfaceWarm:'#E9F0E7', ink:'#16301F'}
+  };
+  function applyTheme(t){
+    root.style.setProperty('--accent', t.accent);
+    root.style.setProperty('--accent-soft', t.accentSoft);
+    root.style.setProperty('--secondary', t.secondary);
+    root.style.setProperty('--secondary-soft', t.secondarySoft);
+    root.style.setProperty('--bg', t.bg);
+    root.style.setProperty('--surface-warm', t.surfaceWarm);
+    root.style.setProperty('--ink', t.ink);
+    document.getElementById('pick-accent').value = t.accent;
+    document.getElementById('pick-bg').value = t.bg;
+  }
+  document.querySelectorAll('.swatch').forEach(function(s){
+    s.addEventListener('click', function(){ applyTheme(themes[s.dataset.theme]); });
+  });
+  document.getElementById('pick-accent').addEventListener('input', function(e){ root.style.setProperty('--accent', e.target.value); });
+  document.getElementById('pick-bg').addEventListener('input', function(e){ root.style.setProperty('--bg', e.target.value); });
+
+  showPage('start');
+})();
+</script>
+</body>
+</html>
