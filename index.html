@@ -225,6 +225,24 @@ textarea:focus-visible,.nav-link:focus-visible,summary:focus-visible{
 .faq-a{padding:0 0 1.4rem;color:var(--ink-soft);max-width:70ch;}
 .faq-a[hidden]{display:none;}
 
+/* ===========================  AKTUELLES / NEWS  =========================== */
+.post-list{display:grid;gap:1.5rem;margin-top:1.8rem;}
+.post{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;}
+.post-media{aspect-ratio:16/7;background:linear-gradient(135deg,var(--accent-soft),var(--secondary-soft));
+  display:grid;place-items:center;color:var(--ink-soft);font-size:.9rem;}
+.post-body{padding:1.6rem 1.8rem 1.8rem;}
+.post-meta{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;font-size:.85rem;color:var(--ink-soft);margin-bottom:.7rem;}
+.post-tag{background:var(--accent-soft);color:var(--accent);padding:.2rem .7rem;border-radius:var(--r-pill);font-weight:600;}
+.post h3{font-size:clamp(1.25rem,2.5vw,1.6rem);margin-bottom:.5rem;}
+.post-teaser{color:var(--ink-soft);margin-bottom:1rem;}
+.post-more{font:inherit;font-weight:600;color:var(--accent);background:none;border:none;cursor:pointer;
+  padding:0;display:inline-flex;gap:.4rem;align-items:center;}
+.post-more .chev{transition:transform .2s;}
+.post-more[aria-expanded="true"] .chev{transform:rotate(180deg);}
+.post-full{margin-top:1.1rem;border-top:1px solid var(--line);padding-top:1.1rem;}
+.post-full p{color:var(--ink-soft);}
+.post-full[hidden]{display:none;}
+
 /* ===========================  FORM  =========================== */
 .form{display:grid;gap:1.2rem;max-width:560px;}
 .field{display:grid;gap:.4rem;}
@@ -321,10 +339,10 @@ textarea:focus-visible,.nav-link:focus-visible,summary:focus-visible{
 
     <nav class="nav" id="mainnav" aria-label="Hauptnavigation">
       <button class="nav-link" data-page="start">Start</button>
+      <button class="nav-link" data-page="aktuelles">Aktuelles</button>
       <button class="nav-link" data-page="vorstand">Vorstand</button>
       <button class="nav-link" data-page="selbstverstaendnis">Selbstverständnis</button>
       <button class="nav-link" data-page="faq">FAQ</button>
-      <button class="nav-link" data-page="mitglied">Mitglied werden</button>
       <button class="nav-link" data-page="kontakt">Kontakt</button>
       <button class="btn btn-primary nav-cta" data-page="mitglied">Mitmachen</button>
     </nav>
@@ -391,6 +409,70 @@ textarea:focus-visible,.nav-link:focus-visible,summary:focus-visible{
     </div>
   </section>
 
+</section>
+
+<!-- ===========================  AKTUELLES / NEWS  =========================== -->
+<section class="page" id="page-aktuelles" hidden>
+  <div class="wrap page-narrow">
+    <p class="eyebrow">Aktuelles</p>
+    <h2>News aus dem Verband</h2>
+    <p>Veranstaltungen, Standpunkte und Neuigkeiten – die jüngsten Beiträge stehen oben. (Die folgenden Einträge sind Platzhalter.)</p>
+
+    <div class="post-list">
+
+      <!-- ░░░░░░░░░░ KOPIERVORLAGE: Diesen ganzen <article>-Block kopieren und HIER OBEN einfügen, um einen neuen Beitrag anzulegen. ░░░░░░░░░░ -->
+      <article class="post">
+        <div class="post-media" aria-hidden="true">Bild-Platzhalter (optional)</div>
+        <div class="post-body">
+          <div class="post-meta">
+            <span class="post-tag">Verband</span>
+            <span>12. Juni 2026</span>
+          </div>
+          <h3>Wir sind gegründet – der queere Landesverband MV ist da</h3>
+          <p class="post-teaser">Nach Monaten der Vorbereitung ist es offiziell: Queere Menschen und Gruppen in Mecklenburg-Vorpommern haben einen gemeinsamen Landesverband. Was das bedeutet und wie es jetzt weitergeht.</p>
+          <button class="post-more" aria-expanded="false"><span class="label">Weiterlesen</span> <span class="chev" aria-hidden="true">▾</span></button>
+          <div class="post-full" hidden>
+            <p>Hier steht der vollständige Text des Beitrags. Ihr könnt beliebig viele Absätze ergänzen, Zwischenüberschriften setzen oder Links einbauen.</p>
+            <p>Für den Anfang reicht ein kurzer Text – wichtig ist vor allem, dass die Seite lebt und regelmäßig Neues zeigt.</p>
+          </div>
+        </div>
+      </article>
+      <!-- ░░░░░░░░░░ ENDE KOPIERVORLAGE ░░░░░░░░░░ -->
+
+      <article class="post">
+        <div class="post-media" aria-hidden="true">Bild-Platzhalter (optional)</div>
+        <div class="post-body">
+          <div class="post-meta">
+            <span class="post-tag">Termine</span>
+            <span>2. Juni 2026</span>
+          </div>
+          <h3>Einladung: erstes landesweites Vernetzungstreffen</h3>
+          <p class="post-teaser">Wir laden alle queeren Gruppen, Initiativen und Einzelpersonen aus MV zu einem offenen Vernetzungstreffen ein. Kommt vorbei, lernt euch kennen, bringt eure Themen mit.</p>
+          <button class="post-more" aria-expanded="false"><span class="label">Weiterlesen</span> <span class="chev" aria-hidden="true">▾</span></button>
+          <div class="post-full" hidden>
+            <p>Ort, Datum und Ablauf tragt ihr hier ein. Eine kurze Anfahrtsbeschreibung und ein Hinweis zur Barrierefreiheit des Veranstaltungsorts sind besonders hilfreich.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="post">
+        <div class="post-media" aria-hidden="true">Bild-Platzhalter (optional)</div>
+        <div class="post-body">
+          <div class="post-meta">
+            <span class="post-tag">Standpunkt</span>
+            <span>17. Mai 2026</span>
+          </div>
+          <h3>Zum IDAHOBIT: Sichtbarkeit ist kein Selbstläufer</h3>
+          <p class="post-teaser">Am Internationalen Tag gegen Queerfeindlichkeit erinnern wir daran, dass Akzeptanz erkämpft wird – auch und gerade in ländlichen Regionen.</p>
+          <button class="post-more" aria-expanded="false"><span class="label">Weiterlesen</span> <span class="chev" aria-hidden="true">▾</span></button>
+          <div class="post-full" hidden>
+            <p>Hier steht euer Statement. Solche Beiträge eignen sich gut, um Haltung zu zeigen und in der Öffentlichkeit zitierfähig zu sein.</p>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
 </section>
 
 <!-- ===========================  VORSTAND  =========================== -->
@@ -665,6 +747,7 @@ textarea:focus-visible,.nav-link:focus-visible,summary:focus-visible{
       <div>
         <h4>Seiten</h4>
         <button data-page="start">Start</button>
+        <button data-page="aktuelles">Aktuelles</button>
         <button data-page="vorstand">Vorstand</button>
         <button data-page="selbstverstaendnis">Selbstverständnis</button>
         <button data-page="faq">FAQ</button>
@@ -761,6 +844,25 @@ textarea:focus-visible,.nav-link:focus-visible,summary:focus-visible{
       const open = btn.getAttribute('aria-expanded') === 'true';
       btn.setAttribute('aria-expanded', String(!open));
       answer.hidden = open;
+    });
+  });
+
+  /* ---------- Aktuelles: Beiträge auf-/zuklappen (auto-verkabelt, keine IDs nötig) ---------- */
+  document.querySelectorAll('.post').forEach(function(post, i){
+    const btn = post.querySelector('.post-more');
+    const full = post.querySelector('.post-full');
+    if(!btn || !full) return;
+    const id = 'post-full-' + (i + 1);
+    full.id = id;
+    btn.setAttribute('aria-controls', id);
+    btn.setAttribute('aria-expanded', 'false');
+    full.hidden = true;
+    btn.addEventListener('click', function(){
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      full.hidden = open;
+      const lbl = btn.querySelector('.label');
+      if(lbl) lbl.textContent = open ? 'Weiterlesen' : 'Weniger anzeigen';
     });
   });
 
